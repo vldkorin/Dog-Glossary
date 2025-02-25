@@ -112,6 +112,22 @@ class Test extends StageTest {
             input.value = "";
         };
 
+        // check ul in ol
+        this.checkUl = () => {
+            // check if ul exists
+            const olInContent = document.body.querySelector("#content > ol");
+            const ul = olInContent.querySelector("li > ul");
+            if (!ul) return wrong("The unordered list inside list item is not displayed after clicking the button.");
+
+            // check if ul has li
+            const li = ul.querySelector("li");
+            if (!li) return wrong("The unordered list does not have any list items.");
+
+            // check if li has text
+            if (li.innerText.trim().length === 0)
+                return wrong("The list item does not have any text.");
+        };
+
         // check if helpers still attached
         this.checkHelpers = () => {
             return true;
@@ -197,12 +213,13 @@ class Test extends StageTest {
                 return wrong(reloadDetectedMsg);
             }
 
-
             // check img
+
             await this.page.evaluate(() => {
                 const srcStart = "https://images.dog.ceo/breeds";
                 return this.checkImg(srcStart);
             });
+
 
             await button.click();
 
@@ -211,7 +228,6 @@ class Test extends StageTest {
                     resolve();
                 }, 3000)
             }));
-
 
             // check content only has one element
             await this.page.evaluate(() => {
@@ -223,7 +239,6 @@ class Test extends StageTest {
                 const srcStart = "https://images.dog.ceo/breeds";
                 return this.checkImg(srcStart);
             });
-
 
             return correct();
 
@@ -288,7 +303,6 @@ class Test extends StageTest {
                 return wrong(reloadDetectedMsg);
             }
 
-
             // check content only has one element
             await this.page.evaluate(() => {
                 return this.checkContentLen();
@@ -299,7 +313,6 @@ class Test extends StageTest {
                 const srcStart = "https://images.dog.ceo/breeds/hound";
                 return this.checkImg(srcStart);
             });
-
 
             // check if it can handle wrong input
             const wrongInput = " scooby";
@@ -312,7 +325,6 @@ class Test extends StageTest {
                 }, 3000)
             }));
 
-
             // check paragraph
             await this.page.evaluate(() => {
                 return this.checkP();
@@ -322,7 +334,6 @@ class Test extends StageTest {
             await this.page.evaluate(() => {
                 return this.checkContentLen();
             });
-
 
             return correct();
 
@@ -346,11 +357,12 @@ class Test extends StageTest {
         }),
         this.node.execute(async () => {
             const reloadDetectedMsg = "Looks like the page was reloaded. Please prevent the page from reloading."
+            // check if there was a reload
+
             // test #7
             await this.page.evaluate(() => {
                 return this.emptyInput();
             });
-
 
             // check button click  click
             const buttonShowBreed = "#button-show-sub-breed";
@@ -370,7 +382,6 @@ class Test extends StageTest {
                 }, 3000)
             }));
 
-            // check if there was a reload
             try {
                 await this.page.evaluate(() => {
                     return this.checkHelpers();
@@ -387,28 +398,6 @@ class Test extends StageTest {
             // check ol
             await this.page.evaluate(() => {
                 return this.checkOl();
-            });
-
-            // check if it can handle wrong input
-            const wrongInput = " cute";
-            await input.inputText(wrongInput);
-            await button.click();
-
-            await new Promise((resolve => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 3000)
-                }
-            ));
-
-            // check paragraph
-            await this.page.evaluate(() => {
-                return this.checkP();
-            });
-
-            // check content only has one element
-            await this.page.evaluate(() => {
-                return this.checkContentLen();
             });
 
             await this.page.evaluate(() => {
@@ -436,6 +425,62 @@ class Test extends StageTest {
             await this.page.evaluate(() => {
                 return this.checkContentLen();
             });
+
+            return correct();
+
+        }),
+        this.page.execute(() => {
+            // test #8
+            // check if #button-show-all exists
+            const buttonShowAll = "#button-show-all";
+            if (this.elementExists(buttonShowAll)) return wrong(this.missingIdMsg(buttonShowAll));
+
+            // check if its button
+            if (this.elementExists(buttonShowAll, ["button"]))
+                return wrong(this.wrongTagMsg(buttonShowAll, "button"));
+
+            // check if it has text
+            const buttonText = "Show All Breeds";
+            if (this.elementHasText(buttonShowAll, buttonText))
+                return wrong(this.wrongTextMsg(buttonShowAll, buttonText));
+
+            return correct();
+        }),
+        this.node.execute(async () => {
+            const reloadDetectedMsg = "Looks like the page was reloaded. Please prevent the page from reloading."
+
+            // test #9
+            // check button click
+            const buttonShowBreed = "#button-show-all";
+            const button = await this.page.findBySelector(buttonShowBreed);
+            const isEventFired = button.waitForEvent('click', 1000);
+            await button.click();
+
+            if (await !isEventFired) return wrong(`Expected click event on button with ${buttonShowBreed} id!`);
+
+            await new Promise((resolve => {
+                setTimeout(() => {
+                    resolve();
+                }, 3000)
+            }));
+
+            // check if there was a reload
+            try {
+                await this.page.evaluate(() => {
+                    return this.checkHelpers();
+                })
+            } catch (e) {
+                return wrong(reloadDetectedMsg);
+            }
+
+            // check content only has one element
+            await this.page.evaluate(() => this.checkContentLen());
+
+            // check ol
+            await this.page.evaluate(() => this.checkOl());
+
+            // check ul
+            await this.page.evaluate(() => this.checkUl());
 
             return correct();
 

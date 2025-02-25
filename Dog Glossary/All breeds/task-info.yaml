@@ -6,6 +6,9 @@ files:
   - name: test/test.js
     visible: false
     learner_created: false
+  - name: src/index.js
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/26331#comment
 status: Unchecked
 record: -1
