@@ -4,6 +4,8 @@ document.getElementById('button-show-breed')
     .addEventListener('click', getDogByBreed);
 document.getElementById("button-show-sub-breed")
     .addEventListener('click', getDogSubBreed);
+document.getElementById("button-show-all")
+    .addEventListener('click', getAllBreeds);
 
 async function getRandomDog() {
     const url = 'https://dog.ceo/api/breeds/image/random';
@@ -119,6 +121,59 @@ function displayDogBySubBreed (json) {
     }
     divCont.appendChild(list);
 }
+
+async function getAllBreeds () {
+    clearSubBreedList();
+    clearBreed();
+    clearBreedNotFoundMessage();
+    const url = `https://dog.ceo/api/breeds/list/all`;
+    try {
+        const response = await fetch(url);
+        const json = await response.json();
+
+        if (json.status === "error") {
+            showBreedNotFound();
+            return;
+        }
+
+        displayAllBreeds(json);
+    } catch (error) {
+        console.error(error.message);
+        showBreedNotFound();
+    }
+}
+function displayAllBreeds(json) {
+    console.log(json);
+    clearBreed();
+    clearBreedNotFoundMessage();
+
+    let divCont = document.getElementById("content");
+    let list = document.createElement('ol');
+    list.id = "sub-breed-list";
+
+    for (const [breed, subBreeds] of Object.entries(json.message)) {
+        let listElement = document.createElement("li");
+        listElement.textContent = breed;
+
+        if (subBreeds.length > 0) {
+            let subList = document.createElement("ul");
+
+            for (let subBreed of subBreeds) {
+                let subListElement = document.createElement("li");
+                subListElement.textContent = subBreed;
+                subList.appendChild(subListElement);
+            }
+
+            listElement.appendChild(subList);
+        }
+
+        list.appendChild(listElement);
+    }
+
+    divCont.appendChild(list);
+}
+
+
 function showBreedNotFound () {
     clearBreedNotFoundMessage();
     let errormessage = document.createElement('p');
