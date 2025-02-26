@@ -1,0 +1,80 @@
+#text {
+    text-align: center;
+    font-style: italic;
+    font-family: "Cascadia Code", serif;
+}
+#button-container {
+    margin: auto;
+    width: 50%;
+}
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+button {
+    background: linear-gradient(135deg, #ff7eb3, #ff758c);
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 20px;
+    margin: 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(255, 117, 140, 0.3);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(255, 117, 140, 0.5);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(255, 117, 140, 0.3);
+}
+#input-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#input-breed {
+    width: 400px;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ff758c;
+    border-radius: 25px;
+    outline: none;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+#input-breed:focus {
+    border-color: #ff7eb3;
+    box-shadow: 0 0 10px rgba(255, 117, 140, 0.5);
+}
+
+#input-breed::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+img {
+    width: 500px;
+    text-align: center;
+
+}
